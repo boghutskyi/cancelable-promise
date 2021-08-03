@@ -46,7 +46,7 @@ class CancelablePromise {
 
     then(onFulfilled, onRejected) {
         if (onFulfilled && typeof onFulfilled !== 'function') {
-            throw new Error('then must get a function');
+            throw new Error('then() must get correct argument');
         }
         return new CancelablePromise((resolve, reject) => {
 
@@ -64,15 +64,11 @@ class CancelablePromise {
                     reject(_err);
                 }
             };
-            if (typeof onFulfilled !== 'function') {
-                throw new Error('then() must get correct argument');
-            }
-            if (this.$state === 'FULFILLED') {
+
+            if (this.$state === 'FULFILLED' || this.$state === 'REJECTED') {
                 _onFulfilled(this.$internalValue);
             }
-            if (this.$state === 'REJECTED') {
-                _onFulfilled(this.$internalValue);
-            }
+
             this.$chained.push({
                 onFulfilled: _onFulfilled,
                 onRejected: _onRejected,
